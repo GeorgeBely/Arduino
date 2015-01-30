@@ -1,40 +1,14 @@
 int ledPin = 13;
 int buttonPin = 8;
 
-boolean ledValue = false;
-
 void setup() {
   pinMode(ledPin, OUTPUT);
-  pinMode(ledPin, INPUT); //Устанавливаем пин на считывание  
+  pinMode(buttonPin, INPUT); //Устанавливаем пин на считывание
 }
 
 void loop() {
-  //Если кнопка нажата меняем значение светодиода
-  if (changeButton(button))
-    ledValue = !ledValue;
-    
-  digitalWrite(led, ledValue); 
+  //Считываем значение с пина который подключён к кнопке.
+  //Если есть ток то вернёт true.
+  boolean value = digitalRead(buttonPin);
+  digitalWrite(led, value); 
 }
-
-//Предыдушее значение нажатия кнопки
-boolean lastButton = false;
-//Функция для определения нажатия кнопки
-boolean changeButton(int buttonPin) {
-  //Получаем текушее значение нажатия кнопки
-  boolean current = digitalRead(buttonPin);
-  if (current != lastButton) {
-    delay(5);
-    //Убираем помехт. За 5 милисекунд человек не успеет убрать палец.
-    current = digitalRead(buttonPin);
-    
-    //Проверяем, что до этого кнопка была не нажата, а сейчас нажата
-    if (lastButton ==  LOW && current == HIGH) {
-      //Если верно, то запоминаем, что копка нажата,
-      lastButton = current;
-      return true;  
-    }
-  }  
-  lastButton = current;
-  return false;
-}
-

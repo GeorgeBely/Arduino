@@ -1,12 +1,14 @@
 int ledPin = 13;
-boolean value = false;
 
+//Метод, который запускается при включение arduino
 void setup() {
   pinMode(ledPin, OUTPUT); //подключение пина на выход  
 }
 
+//Метод, который бесконечно повторяется на протяжение всей работы arduino
 void loop() {
-  value = !value; //меняем значение светодиода (светиться/не светиться)
-  digitalWrite(ledPin, value); //Установка светодиоду в значение value
-  delay(2000); //задержка на 2 секунды 
+  digitalWrite(ledPin, true); //Включаем светодиод
+  delay(2000); //задержка на 2 секунды
+  digitalWrite(ledPin, value); //Выключаем светодиод
+  delay(2000); //задержка на 2 секунды
 }
