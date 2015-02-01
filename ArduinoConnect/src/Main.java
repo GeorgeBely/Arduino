@@ -15,7 +15,7 @@ public class Main implements SerialPortEventListener {
     /** The port we're normally going to use. */
     private static final String PORT_NAMES[] = {
             "/dev/tty.usbserial-A9007UX1", // Mac OS X
-            "/dev/ttyACM1", // Raspberry Pi
+            "/dev/ttyACM0", // Raspberry Pi
             "/dev/ttyUSB0", // Linux
             "COM3", // Windows
     };
@@ -53,7 +53,7 @@ public class Main implements SerialPortEventListener {
 
 
     public void initialize() {
-        System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM1");
+        System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM0");
 
         CommPortIdentifier portId = null;
         Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
