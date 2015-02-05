@@ -25,9 +25,9 @@ int relayTvPin = 0;
 int relayBoxAnalog = A0;                  
 //Бокс реле для подключения к аналоговому выходу 0 
 //несколькох датчиков.
-int relayBox1 = 1;
-int relayBox2 = 2;
-int relayBox3 = 3
+int relayAnalogBox1 = 1;
+int relayAnalogBox2 = 2;
+int relayAnalogBox3 = 3
 
 //Модуль реального времени
 int clockDatePin = A5;
@@ -59,9 +59,9 @@ void setup() {
   pinMode(relayLightDownPin, OUTPUT);
   pinMode(relayLightUpPin, OUTPUT);
   pinMode(relayTvPin, OUTPUT);
-  pinMode(relayBox1, OUTPUT);
-  pinMode(relayBox2, OUTPUT);
-  pinMode(relayBox3, OUTPUT);
+  pinMode(relayAnalogBox1, OUTPUT);
+  pinMode(relayAnalogBox2, OUTPUT);
+  pinMode(relayAnalogBox3, OUTPUT);
 }
 
 void loop() {
@@ -72,44 +72,44 @@ void loop() {
 
 //Считывает температуру на улице
 getStreetTerm() {
-  changeRelayBox(0, 0, 0);
-  return (125 * analogRead(relayBoxAnalog)) >> 8;   
+  changeRelayAnalogBox(0, 0, 0);
+  return (125 * analogRead(relayBoxAnalog)) >> 8;
 }
 
 //Считывает температуру в комнате
 getRoomTerm() {
-  changeRelayBox(0, 0, 1);
-  return (125 * analogRead(relayBoxAnalog)) >> 8;   
+  changeRelayAnalogBox(0, 0, 1);
+  return (125 * analogRead(relayBoxAnalog)) >> 8;
 }
 
 //Считывает значение потенциометра красного цвета
 getPotRed() {
-  changeRelayBox(1, 0, 0);
+  changeRelayAnalogBox(1, 0, 0);
   return analogRead(relayBoxAnalog);
 }
 
 //Считывает значение потенциометра зелёного цвета
 getPotGreen() {
-  changeRelayBox(1, 0, 1);
+  changeRelayAnalogBox(1, 0, 1);
   return analogRead(relayBoxAnalog);
 }
 
 //Считывает значение потенциометра синего цвета
 getPotBlue() {
-  changeRelayBox(1, 1, 0);
+  changeRelayAnalogBox(1, 1, 0);
   return analogRead(relayBoxAnalog);
 }
 
 //Считывает значение потенциометра уровня цвета
 getPotLightLevel() {
-  changeRelayBox(1, 1, 1);
+  changeRelayAnalogBox(1, 1, 1);
   return analogRead(relayBoxAnalog);
 }
 
 //Подключает нужный датчик
-changeRelayBox(int relay1, int relay2, int relay3) {
-  digitalWrite(relayBox1, relay1);
-  digitalWrite(relayBox2, relay2);
-  digitalWrite(relayBox3, relay3);
+changeRelayAnalogBox(int relay1, int relay2, int relay3) {
+  digitalWrite(relayAnalogBox1, relay1);
+  digitalWrite(relayAnalogBox2, relay2);
+  digitalWrite(relayAnalogBox3, relay3);
   delay(50);
 }
