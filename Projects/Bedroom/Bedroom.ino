@@ -8,11 +8,16 @@ int lightRedPin = 11;
 int lightGreenPin = 10;
 int lightBluePin = 9;
 
-int windowPin = 6;
+     
+//1. Табло с отображением времени
+//2. Табло с отображением комнатной температуры
+//3. Табло с отображением уличной температуры
+//4. Отключение нижниго и верхнего света
+int digitalBoxPin1 = 5
+int digitalBoxPin2 = 6
 
-int relayLightDownPin = 5;
-int relayLightUpPin = 4;
-int relayTvPin = 0;
+int relayDigitalBox1 = 3
+int relayDigitalBox2 = 4
           
 //1. Термометр уличный
 //2. Термометр комнатный
@@ -22,12 +27,12 @@ int relayTvPin = 0;
 //6. Потенциометр основного света (зелёный)
 //7. Потенциометр основного света (синий)
 //8. Потенциометр уровня основного света
-int relayBoxAnalog = A0;                  
+int analogBoxPin = A0;                  
 //Бокс реле для подключения к аналоговому выходу 0 
 //несколькох датчиков.
-int relayAnalogBox1 = 1;
-int relayAnalogBox2 = 2;
-int relayAnalogBox3 = 3
+int relayAnalogBox1 = 0;
+int relayAnalogBox2 = 1;
+int relayAnalogBox3 = 2
 
 //Модуль реального времени
 int clockDatePin = A5;
@@ -111,5 +116,36 @@ changeRelayAnalogBox(int relay1, int relay2, int relay3) {
   digitalWrite(relayAnalogBox1, relay1);
   digitalWrite(relayAnalogBox2, relay2);
   digitalWrite(relayAnalogBox3, relay3);
+  delay(50);
+}
+
+//Используем светодиодную панель отображения времени
+useTimePanel() {
+  changeRelayDigitalBox(0, 0);
+}
+
+//Используем светодиодную панель отображения уличной температуры
+useStreetTermPanel() {        
+  changeRelayDigitalBox(0, 1);
+
+}
+                                         
+//Используем светодиодную панель отображения комнатной температуры
+useRoomTermPanel() {        
+  changeRelayDigitalBox(1, 0);
+
+}
+
+//Используем реле для отключения света
+useOffLight() {
+  changeRelayDigitalBox(1, 1);
+
+}
+
+
+//Подключает нужное устройство
+changeRelayDigitalBox(int relay1, int relay2) {
+  digitalWrite(relayDigitalBox1, relay1);
+  digitalWrite(relayDigitalBox2, relay2);
   delay(50);
 }
