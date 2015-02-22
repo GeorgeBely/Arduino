@@ -1,13 +1,12 @@
 #include <IRremote.h>
 
-int RECV_PIN = 11;//choose pin 11 for receiver
-int ledPin = 9;
+int IRemotePin = 11;
+int ledPin = 6;
 
+boolean ledValue = false; 
+int ledLevel = 255;
 
-boolean ledValue = false;
-int ledLevel = 0;
-
-IRrecv irrecv(RECV_PIN);
+IRrecv irrecv(IRemotePin);
 decode_results remoteValue;
 
 void setup() {
@@ -17,80 +16,71 @@ void setup() {
 }
 
 void loop() {
-  String value = getRemoteValue();
+  String value = getRemoteValue(); 
   if (value != "") {
-    Serial.println(value);
-    if (value == "on")
-      ledValue = !ledValue;
-    else if (value == "+") {
-      if (ledLevel > 245)
-        ledLevel = 255;
-      else
-        ledLevel = ledLevel + 10;
-    } else if (value == "-") {
-      if (ledLevel < 10)
-        ledLevel = 0;
-      else 
-        ledLevel = ledLevel - 10;
-    }
-    Serial.println(ledValue);
-    Serial.println(ledLevel);
-  }
-  
-  if (ledValue) {
-    analogWrite(ledPin, ledLevel);
-  } else {
-    digitalWrite(ledPin, LOW);
+     Serial.println(value);
+     
+     if (value == "on") {
+       ledValue = !ledValue;
+       if (ledValue) {
+         analogWrite(ledPin, ledLevel);
+       } else {
+         digitalWrite(ledPin, LOW);
+       }
+     }
+     
+     if (value == "-") {
+       if (ledLevel <= 10) {
+         ledLevel = 0;
+       } else {
+         ledLevel = ledLevel - 10;
+       }
+       analogWrite(ledPin, ledLevel);  
+     }
+     
+     if (value == "+") {
+       if (ledLevel >= 245) {
+         ledLevel = 255;
+       } else {
+         ledLevel = ledLevel + 10;
+       }
+       analogWrite(ledPin, ledLevel);  
+     }
   }
 }
 
+
+
+/*
+ * Функция возвращает наименование нажатой кнопки
+ * на пульте. 
+*/
 String getRemoteValue() {
   if (irrecv.decode(&remoteValue)) {
-    String result = String(remoteValue.value, HEX);
-    irrecv.resume();
-    
-    if (result == "ffffffff")
-      return "";
-    else if (result == "ffa25d")
-      return "on";
-    else if (result == "ffe21d")
-      return "menu";
-    else if (result == "ff22dd")
-      return "test";
-    else if (result == "ff02fd")
-      return "+";
-    else if (result == "ffc23d")
-      return "back";
-    else if (result == "ffe01f")
-      return "previous";
-    else if (result == "ffa857")
-      return "play";
-    else if (result == "ff906f")
-      return "next";
-    else if (result == "ff6897")
-      return "0";
-    else if (result == "ff9867")
-      return "-";
-    else if (result == "ffb04f")
-      return "c";
-    else if (result == "ff30cf")
-      return "1";
-    else if (result == "ff18e7")
-      return "2";
-    else if (result == "ff7a85")
-      return "3";
-    else if (result == "ff10ef")
-      return "4";
-    else if (result == "ff38c7")
-      return "5";
-    else if (result == "ff5aa5")
-      return "6";
-    else if (result == "ff42bd")
-      return "7";
-    else if (result == "ff4ab5")
-      return "8";
-    else if (result == "ff52ad")
-      return "9";
-    }
+    irrecv.resume();    
+    switch(remoteValue.value) {
+      case 4294967295: return "";
+      case 16753245: return "on";
+      case 16769565: return "menu";
+      case 16720605: return "test";
+      case 16712445: return "+";
+      case 16761405: return "back";
+      case 16769055: return "previous";
+      case 16754775: return "play";
+      case 16748655: return "next";
+      case 16738455: return "0";
+      case 16750695: return "-";
+      case 16756815: return "c";
+      case 16724175: return "1";
+      case 16718055: return "2";
+      case 16743045: return "3";
+      case 16716015: return "4";
+      case 16726215: return "5";
+      case 16734885: return "6";
+      case 16728765: return "7";
+      case 16730805: return "8";
+      case 16732845: return "9";
+    }       
+  }
   return "";
 }
