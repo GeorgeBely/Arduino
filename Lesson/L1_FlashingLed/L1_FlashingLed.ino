@@ -9,6 +9,6 @@ void setup() {
 void loop() {
   digitalWrite(ledPin, true); //Включаем светодиод
   delay(2000); //задержка на 2 секунды
-  digitalWrite(ledPin, value); //Выключаем светодиод
+  digitalWrite(ledPin, false); //Выключаем светодиод
   delay(2000); //задержка на 2 секунды
 }
