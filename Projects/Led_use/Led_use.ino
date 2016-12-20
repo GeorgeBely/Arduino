@@ -15,6 +15,9 @@
 //Номер пина к которому подключён датчик движения
 #define MOVE_SENSOR_PIN 3
 
+//Номер аналогового пина, к которому подклчёт фоторезистор
+#define PHOTORESISTOR_PIN A5
+
 //Для работы с микросхемой часов и индикатором мы используем библиотеки
 //Классы TM1637 и DS1307 объявлены именно в них
 TM1637 display(DISPLAY_CLK_PIN, DISPLAY_DIO_PIN);
@@ -43,7 +46,9 @@ void loop() {
     useLedTime = MAX_SEK_USE_LED_COUNT;
   } else {  
     if (useLedTime <= 0) {
-      setDisplayValue(count, true);
+      int lightVal = analogRead(PHOTORESISTOR_PIN);
+    
+      setDisplayValue(lightVal, true);
       digitalWrite(RELAY_PIN, true);
     } else if (useLedTime <= 0.1) {
       count++;

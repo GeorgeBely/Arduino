@@ -76,3 +76,9 @@ boolean isMoveEnable(int moveSensorPin) {
   return false;
 }
 
+
+//Функция считывает температуру. 
+//Первый аргумент номер пина к которому подключён термометр.
+int getTerm(int pin) {
+  return (125 * analogRead(pin)) >> 8;   
+}
