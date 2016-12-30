@@ -1,14 +1,16 @@
-int ledPin = 13;
-int buttonPin = 8;
+#define LED_PIN 13
+#define BUTTON_PIN 8
+
 
 void setup() {
-  pinMode(ledPin, OUTPUT);
-  pinMode(buttonPin, INPUT); //Устанавливаем пин на считывание
+    pinMode(LED_PIN, OUTPUT); //Устанавливаем значение пина на выход (подача тока)
+    pinMode(BUTTON_PIN, INPUT); //Устанавливаем значение пина на вход
 }
 
+
 void loop() {
-  //Считываем значение с пина который подключён к кнопке.
-  //Если есть ток то вернёт true.
-  boolean value = digitalRead(buttonPin);
-  digitalWrite(led, value); 
+    //Считываем значение с пина который подключён к кнопке.
+    //Если есть ток то вернёт true.
+    boolean value = digitalRead(BUTTON_PIN);
+    digitalWrite(LED_PIN, value);
 }
