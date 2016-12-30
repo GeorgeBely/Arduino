@@ -3,6 +3,7 @@
 /** С помощью этой переменной будем отрисовывать данные на дисплей */
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
+
 void setup() {
     lcd.begin(16, 2);
 }
@@ -20,6 +21,7 @@ void loop() {
  *                    (0 первая строка, 1 вторая строка)
  */
 void lcdPrint(String msg, int numberStr) {
-  lcd.setCursor(0, numberStr);
-  lcd.print(msg);
+    lcd.setCursor(0, numberStr);
+    lcd.print("                ");
+    lcd.print(msg);
 }
