@@ -1,9 +1,10 @@
-int ledPin = 13;
-//led for visualization (use 13 for built-in led)
- 
-int speakerPin = 3;
-//speaker connected to one of the PWM ports
- 
+/** Подключаем светодиод */
+#define LED_PIN 13
+
+/** Подключаем buzzer (пищалка) */
+#define SPEAKER_PIN 3
+
+/** Ноты */
 #define c 261
 #define d 294
 #define e 329
@@ -23,131 +24,125 @@ int speakerPin = 3;
 #define gH 784
 #define gSH 830
 #define aH 880
-//frequencies for the tones we're going to use
-//used http://home.mit.bme.hu/~bako/tonecalc/tonecalc.htm to get these
- 
-void setup() 	 
-{ 	 
-  pinMode(ledPin, OUTPUT);
-  // sets the ledPin to be an output
-  pinMode(speakerPin, OUTPUT); 	
-  //sets the speakerPin to be an output
-} 	 
-  	 
-void loop() 	// run over and over again
-{
-  march();
-} 	 
-  	 
-void beep (unsigned char speakerPin, int frequencyInHertz, long timeInMilliseconds)
-{ 
-    digitalWrite(ledPin, HIGH);	 
-    //use led to visualize the notes being played
-    
-    int x; 	 
-    long delayAmount = (long)(1000000/frequencyInHertz);
-    long loopTime = (long)((timeInMilliseconds*1000)/(delayAmount*2));
-    for (x=0;x<loopTime;x++) 	 
-    { 	 
-        digitalWrite(speakerPin,HIGH);
-        delayMicroseconds(delayAmount);
-        digitalWrite(speakerPin,LOW);
-        delayMicroseconds(delayAmount);
-    } 	 
-    
-    digitalWrite(ledPin, LOW);
-    //set led back to low
-    
-    delay(20);
-    //a little delay to make all notes sound separate
-} 	 
-  	 
-void march() { 	 
-    beep(speakerPin, a, 500); 
-    beep(speakerPin, a, 500);     
-    beep(speakerPin, a, 500); 
-    beep(speakerPin, f, 350); 
-    beep(speakerPin, cH, 150);
-    
-    beep(speakerPin, a, 500);
-    beep(speakerPin, f, 350);
-    beep(speakerPin, cH, 150);
-    beep(speakerPin, a, 1000);
-    //first bit
-    
-    beep(speakerPin, eH, 500);
-    beep(speakerPin, eH, 500);
-    beep(speakerPin, eH, 500);    
-    beep(speakerPin, fH, 350); 
-    beep(speakerPin, cH, 150);
-    
-    beep(speakerPin, gS, 500);
-    beep(speakerPin, f, 350);
-    beep(speakerPin, cH, 150);
-    beep(speakerPin, a, 1000);
-    //second bit...
-    
-    beep(speakerPin, aH, 500);
-    beep(speakerPin, a, 350); 
-    beep(speakerPin, a, 150);
-    beep(speakerPin, aH, 500);
-    beep(speakerPin, gSH, 250); 
-    beep(speakerPin, gH, 250);
-    
-    beep(speakerPin, fSH, 125);
-    beep(speakerPin, fH, 125);    
-    beep(speakerPin, fSH, 250);
-    delay(250);
-    beep(speakerPin, aS, 250);    
-    beep(speakerPin, dSH, 500);  
-    beep(speakerPin, dH, 250);  
-    beep(speakerPin, cSH, 250);  
-    //start of the interesting bit
-    
-    beep(speakerPin, cH, 125);  
-    beep(speakerPin, b, 125);  
-    beep(speakerPin, cH, 250);      
-    delay(250);
-    beep(speakerPin, f, 125);  
-    beep(speakerPin, gS, 500);  
-    beep(speakerPin, f, 375);  
-    beep(speakerPin, a, 125); 
-    
-    beep(speakerPin, cH, 500); 
-    beep(speakerPin, a, 375);  
-    beep(speakerPin, cH, 125); 
-    beep(speakerPin, eH, 1000); 
-    //more interesting stuff (this doesn't quite get it right somehow)
-    
-    beep(speakerPin, aH, 500);
-    beep(speakerPin, a, 350); 
-    beep(speakerPin, a, 150);
-    beep(speakerPin, aH, 500);
-    beep(speakerPin, gSH, 250); 
-    beep(speakerPin, gH, 250);
-    
-    beep(speakerPin, fSH, 125);
-    beep(speakerPin, fH, 125);    
-    beep(speakerPin, fSH, 250);
-    delay(250);
-    beep(speakerPin, aS, 250);    
-    beep(speakerPin, dSH, 500);  
-    beep(speakerPin, dH, 250);  
-    beep(speakerPin, cSH, 250);  
-    //repeat... repeat
-    
-    beep(speakerPin, cH, 125);  
-    beep(speakerPin, b, 125);  
-    beep(speakerPin, cH, 250);      
-    delay(250);
-    beep(speakerPin, f, 250);  
-    beep(speakerPin, gS, 500);  
-    beep(speakerPin, f, 375);  
-    beep(speakerPin, cH, 125); 
-           
-    beep(speakerPin, a, 500);            
-    beep(speakerPin, f, 375);            
-    beep(speakerPin, c, 125);            
-    beep(speakerPin, a, 1000);       
-    //and we're done \ó/    
+
+
+void setup() {
+    pinMode(LED_PIN, OUTPUT);
+    pinMode(SPEAKER_PIN, OUTPUT);
 }
+
+void loop() {
+    march();
+}
+
+/**
+ * Проигрываем имперский марш
+ */
+void march() {
+    beep(a, 500);
+    beep(a, 500);
+    beep(a, 500);
+    beep(f, 350);
+    beep(cH, 150);
+
+    beep(a, 500);
+    beep(f, 350);
+    beep(cH, 150);
+    beep(a, 1000);
+
+    beep(eH, 500);
+    beep(eH, 500);
+    beep(eH, 500);
+    beep(fH, 350);
+    beep(cH, 150);
+
+    beep(gS, 500);
+    beep(f, 350);
+    beep(cH, 150);
+    beep(a, 1000);
+
+    beep(aH, 500);
+    beep(a, 350);
+    beep(a, 150);
+    beep(aH, 500);
+    beep(gSH, 250);
+    beep(gH, 250);
+
+    beep(fSH, 125);
+    beep(fH, 125);
+    beep(fSH, 250);
+    delay(250);
+    beep(aS, 250);
+    beep(dSH, 500);
+    beep(dH, 250);
+    beep(cSH, 250);
+
+    beep(cH, 125);
+    beep(b, 125);
+    beep(cH, 250);
+    delay(250);
+    beep(f, 125);
+    beep(gS, 500);
+    beep(f, 375);
+    beep(a, 125);
+
+    beep(cH, 500);
+    beep(a, 375);
+    beep(cH, 125);
+    beep(eH, 1000);
+
+    beep(aH, 500);
+    beep(a, 350);
+    beep(a, 150);
+    beep(aH, 500);
+    beep(gSH, 250);
+    beep(gH, 250);
+
+    beep(fSH, 125);
+    beep(fH, 125);
+    beep(fSH, 250);
+    delay(250);
+    beep(aS, 250);
+    beep(dSH, 500);
+    beep(dH, 250);
+    beep(cSH, 250);
+
+    beep(cH, 125);
+    beep(b, 125);
+    beep(cH, 250);
+    delay(250);
+    beep(f, 250);
+    beep(gS, 500);
+    beep(f, 375);
+    beep(cH, 125);
+
+    beep(a, 500);
+    beep(f, 375);
+    beep(c, 125);
+    beep(a, 1000);
+}
+
+/**
+ * Проигрывает ноту
+ *
+ * @param frequencyInHertz   временное значение ноты
+ * @param timeInMilliseconds время проигрывания
+ */
+void beep(int frequencyInHertz, long timeInMilliseconds) {
+    digitalWrite(LED_PIN, HIGH);
+
+    int x;
+    long delayAmount = (long) (1000000 / frequencyInHertz);
+    long loopTime = (long) ((timeInMilliseconds * 1000) / (delayAmount * 2));
+    for (x = 0; x < loopTime; x++) {
+        digitalWrite(SPEAKER_PIN, HIGH);
+        delayMicroseconds(delayAmount);
+        digitalWrite(SPEAKER_PIN, LOW);
+        delayMicroseconds(delayAmount);
+    }
+
+    digitalWrite(LED_PIN, LOW);
+
+    delay(20);
+}
+
