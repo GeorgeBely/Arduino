@@ -90,10 +90,16 @@ void removeAll8Led() {
   }  
 }
 
+/**
+ *
+ *
+ * @param length
+ * @param mass
+ */
 void write8Led(int length, int mass[]) {
-  removeAll8Led();  
-  for(int i = 0; i < length; i++) {
-    digitalWrite(mass[i], false);  
-  } 
+    removeAll8Led();
+    for(int i = 0; i < length; i++) {
+        digitalWrite(mass[i], false);
+    }
 }
 
