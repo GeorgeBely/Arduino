@@ -22,6 +22,9 @@ void setup() {
 
 void loop() {
     lcdPrint("Hello World!", 0, 2);
+
+    char sCount[5];
+    itoa(count, sCount, 10);
     lcdPrint(count, 1, 7);
 
     count++;
