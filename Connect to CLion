@@ -1,0 +1,120 @@
+0. Качаем clion: https://www.jetbrains.com/clion/download/, устанавливаем/распаковываем
+
+1. C cywgin не заработало, поэтому надо делать через minGW:
+   Качаем MinGW : sourceforge.net/projects/mingw/files/Installer
+   Ставим с настройкаим по умолчанию, запускаем MinGW Installation Manager, если сам не запустится после установки
+   Выбрать пакеты для установки из Basic Setup
+	— mingw-developer-toolkit
+	— mingw32-base
+	— mingw32-gcc-g++
+	— msys-base
+   нажимаем Apply Changes
+   По дефолту ставится в C:\MinGW   
+
+2. Устанавливаем python2.7: http://matthewhorne.me/how-to-install-python-and-pip-on-windows-10/
+
+3. Win + R -> cmd
+   pip install platformio
+
+   platformio --version
+   PlatformIO, version 3.2.1
+
+   *OK_FACE*
+
+4. Win + R -> cmd
+  cd ../..
+  mkdir hackaton
+  cd hackaton
+  mkdir uno
+  cd uno
+platformio init --board=uno --ide=clion
+
+5. Запускаем clion -> Import Project from Sources -> C:\hackaton\uno
+
+Ctrl + Alt + S
+Build, Execution, Deployment -> Toolchains:
+Cygwin Home -> path_to_MinGW (C:\MinGW)
+
+Ok
+Запустится пересборка и создание кэша для проекта, если все гуд, то никаких варнингов и ошибок не будет.
+
+6. Ставим плагин для Serial Port + Arduino Plugin
+Ctrl + Alt + S
+Plugins
+Browse Repositories
+Find -> Serial Port Monitor
+Find -> Arduino
+Apply -> Restart
+
+
+Должен появится новый элемент -> Seial monitor
+Настраиваем коннект к порту (в Win7, Win10 драйвер для com порта arduino ставится автоматом)
+Тыкаем по настройкам, выбираем порт и скорость передачи данных, например 115200
+
+7. В проекте открываем platformio.ini
+добавляем строчку:
+upload_port = *PORT*
+
+*PORT* - порт на котором висит плата, например com3 (можно посмотреть через Serial port после подключения платы)
+
+Как показала практика лучше создавать отдельную папку, например sketches, в которую класть
+готовые скетчи, свои наработки и т.д, а использовать один файл main.cpp, которым надо прошить плату,
+при необходимости можно просто скопировать нужный код из конкретного скетча и перезалить его в плату.
+
+Открываем файл CMakeLists.txt
+В самом конце строчку:
+add_executable(${PROJECT_NAME} ${SRC_LIST})
+
+меняем на:
+add_executable(${PROJECT_NAME} lib ${SRC_LIST} src/main.cpp)
+
+Это указание на исполняемый файл + набор библиотек, которые будут класться в папку lib
+В случае, если надо будет добавить библиотеку в скетч, то надо будет в нем указать относительный путь касательно скетча, например:
+#nclude <../lib/MySensors/MySensors.h>
+
+
+Создаем папку sketches в корне проекта.
+Создаем файл blink.cpp: (лучше использовать .cpp файлы в отличие от .ino, т.к в этом случае
+работает autocomplete + Code navigation + все плюшки  idea типа навигации по классам и исходникам.
+
+Создаем файл blink.cpp в папке sketches:
+
+#include <Arduino.h>
+
+void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);
+    Serial.begin(115200);
+}
+
+void loop() {
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(1000);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(1000);
+    Serial.println("This is the blink sketch");
+}
+
+Создаем файл main.cpp в папке src, копируем в него содержимое blink.cpp
+
+Ctrl + F9 (по уполчанию стоит таска для заливки в плату скетча, но можно поменять на build, только для комиляции, например)
+
+Если все ОК, плата заморгает встроенным led, а в Seial monitor после коннекта к устройству будет появляться сообщение:
+
+This is the blink sketch
+This is the blink sketch
+This is the blink sketch
+...
+
+PlatformIO позволяет генерить проекты для разных плат, полный список можно посмотреть командой:
+platformio boards
+
+Те же arduino nano, mega и т.д там присутствуют:
+platformio boards | grep mega
+platformio boards | grep nano
+
+
+
+
+
+
+   
