@@ -1,0 +1,58 @@
+v 20130925 2
+B 400 0 1900 1100 3 0 0 0 -1 -1 0 -1 -1 -1 -1 -1
+T 500 1200 9 10 1 0 0 0 1
+YL-38
+P 0 1000 400 1000 1 0 0
+{
+T 0 1000 5 8 0 0 0 0 1
+pintype=unknown
+T 55 995 5 8 1 1 0 0 1
+pinlabel=Vss
+T 0 1000 5 8 0 0 0 0 1
+pinseq=0
+}
+P 0 700 400 700 1 0 0
+{
+T 0 700 5 8 0 0 0 0 1
+pintype=unknown
+T 55 695 5 8 1 1 0 0 1
+pinlabel=GND
+T 0 700 5 8 0 0 0 0 1
+pinseq=0
+}
+P 0 400 400 400 1 0 0
+{
+T 0 400 5 8 0 0 0 0 1
+pintype=unknown
+T 155 395 5 8 1 1 0 0 1
+pinlabel=D0
+T 0 400 5 8 0 0 0 0 1
+pinseq=0
+}
+P 0 100 400 100 1 0 0
+{
+T 0 100 5 8 0 0 0 0 1
+pintype=unknown
+T 155 95 5 8 1 1 0 0 1
+pinlabel=A0
+T 0 100 5 8 0 0 0 0 1
+pinseq=0
+}
+P 2700 800 2300 800 1 0 0
+{
+T 2700 800 5 8 0 0 0 0 1
+pintype=unknown
+T 2545 795 5 8 1 1 0 6 1
+pinlabel=IN1
+T 2700 800 5 8 0 0 0 0 1
+pinseq=0
+}
+P 2700 300 2300 300 1 0 0
+{
+T 2700 300 5 8 0 0 0 0 1
+pintype=unknown
+T 2545 295 5 8 1 1 0 6 1
+pinlabel=IN2
+T 2700 300 5 8 0 0 0 0 1
+pinseq=0
+}

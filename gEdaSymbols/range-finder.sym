@@ -57,3 +57,5 @@ pinnumber=4
 T 3100 0 5 10 0 0 0 0 1
 pinseq=4
 }
+T 3036 2295 8 10 1 1 0 0 1
+refdes=U?
