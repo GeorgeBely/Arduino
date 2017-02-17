@@ -10,6 +10,7 @@ String currStr = "";
 boolean isStringMessage = false;
 
 
+
 void setup() {
     gprsSerial.begin(19200);// GPRS Shield общается по умолчанию на скорости 19200
 

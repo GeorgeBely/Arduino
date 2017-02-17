@@ -9,19 +9,21 @@ void setup() {
 }
 
 void loop() {
-    lcdPrint("number", 0);
-    lcdPrint("1234567890", 1);
+    lcdPrint("number", 0, 0);
+    lcdPrint("1234567890", 1, 0);
 }
 
 /**
  * Отрисовывает строку на дисплей
  *
- * @param msg       - строка
- * @param numberStr - номер строки на которой отобразить "msg"
- *                    (0 первая строка, 1 вторая строка)
+ * @param msg         - строка
+ * @param numberStr   - номер строки на которой отобразить "msg"
+ *                      (0 первая строка, 1 вторая строка)
+ * @param startSymbol - номер строки на которой отобразить "msg"
+ *                      (0 первая строка, 1 вторая строка)
  */
-void lcdPrint(String msg, int numberStr) {
-    lcd.setCursor(0, numberStr);
+void lcdPrint(String msg, int numberStr, int startSymbol) {
+    lcd.setCursor(startSymbol, numberStr); // Переводим курсор на строку {numberStr} на {startSymbol} символ
     lcd.print("                ");
-    lcd.print(msg);
+    lcd.print(msg); // Отрисовываем строку на дисплей
 }

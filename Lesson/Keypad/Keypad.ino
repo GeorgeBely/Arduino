@@ -15,7 +15,7 @@ char keys[ROWS][COLS] = {
 byte rowPins[ROWS] = {A1, A2, A3, A4};
 
 /** Задаём соответствыя, к каким пинам подключён стобец. Можно использовать как аналоговые пины, так и цифровые. */
-byte colPins[COLS] = {3, 4, 5};
+byte colPins[COLS] = {3, 4, 5, 6};
 
 /** С помощью этой переменной будем получать и обрабатывать данные с кейпада */
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);

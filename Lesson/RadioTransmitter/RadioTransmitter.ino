@@ -1,7 +1,7 @@
 #include <VirtualWire.h>
 
-/** Подключаем передатчик к пину 11 */
-#define RADIO_TX_PI 11
+/** Подключаем передатчик к пину 12 */
+#define RADIO_TX_PI 12
 
 
 void setup() {

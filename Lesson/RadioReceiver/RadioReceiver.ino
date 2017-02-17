@@ -1,7 +1,7 @@
 #include <VirtualWire.h>
 
-/** Подключаем передатчик к пину 11 */
-#define RADIO_RX_PI 12
+/** Подключаем приёмник к пину 11 */
+#define RADIO_RX_PI 11
 
 
 void setup() {

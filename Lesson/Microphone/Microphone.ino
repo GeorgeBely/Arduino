@@ -1,4 +1,4 @@
-#define LED_PIN 13
+#define LED_PIN 11
 
 /** Подключаем микрофон к аналоговому выходу 0 */
 #define MICROPHONE_PIN A0
