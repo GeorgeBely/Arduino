@@ -1,0 +1,287 @@
+#include <SoftwareSerial.h>
+#include "Keypad.h"
+/** Подключаем библиотеку DHT для считывания температуры и влажности воздуха с датчика AM*** */
+#include "DHT.h"
+#include <Wire.h>
+#include <LCD.h>
+#include <LiquidCrystal_I2C.h>
+
+/** Подключаем термометр к пину 2 */
+#define DHTPIN 2
+
+/** Lkz Датчика AM2301 задаём: DHT21 */
+#define DHTTYPE DHT21
+
+#define ROWS 4
+#define COLS 4
+
+/** С помощью этой переменной будем получать и обрабатывать данные с термометра */
+DHT dht(DHTPIN, DHTTYPE);
+
+/** заводим Serial-соединение с GPRS-Shield на 7 и 8 цифровых входах */
+SoftwareSerial gprsSerial(7, 8);
+
+/** в строке currStr будем хранить текущую строку, которую передает нам плата */
+String currStr = "";
+
+/** Переменная принимает значение True, если текущая строка является сообщением */
+boolean isStringMessage = false;
+
+/** Задаём символы соответствующие кнопкам клавиатуры */
+char keys[ROWS][COLS] = {
+    {'1', '2', '3', 'A'},
+    {'4', '5', '6', 'B'},
+    {'7', '8', '9', 'C'},
+    {'*', '0', '#', 'D'}
+};
+
+/** Задаём соответствыя, к каким пинам подключена строка. Можно использовать как аналоговые пины, так и цифровые. */
+byte rowPins[ROWS] = {3, 4, 5, 6};
+
+/** Задаём соответствыя, к каким пинам подключён стобец. Можно использовать как аналоговые пины, так и цифровые. */
+byte colPins[COLS] = {A0, A1, A2, A3};
+
+/**
+ * С помощью этой переменной будем отрисовывать данные на дисплей
+ * Параметры     Addr, En, Rw, Rs, d4, d5, d6, d7, backlighpin, polarity  - почему так задаюся хз((
+ * LCD интерфейс нужно подключать SDA -> A4(SDA)   SCL -> A5(SCL)
+ */
+LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+/** Счётчик */
+int count = 1;
+
+/** С помощью этой переменной будем получать и обрабатывать данные с кейпада */
+Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+
+String number = "";
+
+
+
+
+void setup() {
+    gprsSerial.begin(19200);// GPRS Shield общается по умолчанию на скорости 19200
+
+    // Настраиваем приём сообщений с других устройств
+    // Между командами даём время на их обработку
+    gprsSerial.print("AT+CMGF=1\r");
+    delay(300);
+    gprsSerial.print("AT+IFC=1, 1\r");
+    delay(300);
+    gprsSerial.print("AT+CPBS=\"SM\"\r");
+    delay(300);
+    gprsSerial.print("AT+CNMI=1,2,2,1,0\r");
+    delay(300);
+
+    gprsSerial.println("AT+CLIP=1"); // Включаем распознование номера при входящем звонке
+    delay(500);
+  
+    Serial.begin(9600);
+    
+    lcd.begin(16, 2); // Подключаем экран с двумя рядам по 16 символов
+    lcd.setBacklight(HIGH); // Включаем подсветку экрана
+    lcd.home(); // Переместить курсор на начало
+
+    initNumber();
+    
+    dht.begin();
+}
+
+void loop() {
+//    //monitoringGSM();
+//    //sendSMS("hello!!!", "+79515477349");
+//    //delay(10000);
+//
+//     float h = dht.readHumidity(); // Считываем влажность воздуха в процентах
+//    float t = dht.readTemperature(); // Считываем температуру в градусах
+//
+//    // проверяем, что данные корректны
+//    if (isnan(t) || isnan(h)) {
+//        Serial.println("Failed to read from DHT");
+//    } else {
+//        String msg = "";
+//        msg = "Humidity: " + String(h) + "% " + "Temperature:" + String(t) + "*C" ;
+////        Serial.print("Humidity: ");
+////        Serial.print(h);
+////        Serial.print(" %\t");
+////        Serial.print("Temperature: ");
+////        Serial.print(t);
+////        Serial.println(" *C");
+//          Serial.println(msg);
+//          sendSMS(msg, "+79515477349");
+//    }
+//
+//    delay(20000);
+
+
+    char key = keypad.getKey();
+
+    //Проверяем, что кнопка нажата
+    if (key != NO_KEY){
+        if (isDigit(key)){
+          addToNumber(key);
+          lcdPrint(number, 0, 2);
+        }
+        
+        if (key == 'C') {
+          initNumber();
+          lcdPrint(number, 0, 2);
+        }
+
+        if (key == 'B') {
+          float h = dht.readHumidity(); // Считываем влажность воздуха в процентах
+          float t = dht.readTemperature(); // Считываем температуру в градусах
+                    // проверяем, что данные корректны
+          if (isnan(t) || isnan(h)) {
+              Serial.println("Failed to read from DHT");
+          } else {
+              String msg = "";
+              msg = "Humidity: " + String(h) + "% " + "Temperature:" + String(t) + "*C" ;
+                sendSMS(msg, number);
+              lcdPrint(msg, 0, 2);
+              delay(1000);
+              initNumber();
+              lcdPrint(number, 0, 2);
+          }
+        }
+    }
+
+//    lcdPrint("Hello World!", 0, 2);
+//
+//    char sCount[5];
+//    itoa(count, sCount, 10);
+//    lcdPrint(String(count), 1, 7);
+//
+//    count++;
+//    delay(1000);
+}
+
+/**
+ * Функция опрашивает GSM модуль на наличие входящего звонка или СМС.
+ * При их наличии реагирует должным образом.
+ * Для ответа используется функция answerToCall()
+ * Для прочтения СМС используется функция readSMS()
+ */
+void monitoringGSM() {
+    touch();
+
+    if (!gprsSerial.available())
+        return;
+
+    // Считываем очередной символ с платы
+    char currSymb = gprsSerial.read();
+
+    if ('\r' == currSymb) {
+        if (currStr.startsWith("+CMT")) {
+            //если текущая строка начинается с "+CMT",
+            //то следующая строка является сообщением
+            isStringMessage = true;
+        } else if (isStringMessage) {
+            readSMS(currStr);
+            isStringMessage = false;
+        } else if (currStr == "RING") {
+            currStr = "";
+            return;
+        } else if (currStr.startsWith("+CLIP")) {
+            // Получен символ перевода строки, это значит, что текущее
+            // сообщение от платы завершено и мы можем на него отреагировать.
+            // Если текущая строка - это RING, то значит, нам кто-то звонит
+            answerToCall(currStr.substring(12, 24));
+        }
+        currStr = "";
+    } else if (currSymb != '\n') {
+        // Дополняем текущую команду новым сиволом
+        // При этом игнорируем второй символ в последовательности переноса
+        // строки: \r\n
+        currStr += String(currSymb);
+    }
+}
+
+/**
+ * Ответ на входящий звонок
+ */
+void answerToCall(String number) {
+    //Если номер звонящего 79876543210, то отвечаем, если нет то сбрасываем
+//    if (number == "+xvxxxx")
+        gprsSerial.println("ATA");
+//    else
+//        gprsSerial.println("AT+CHUP");
+}
+
+/**
+ * Cразу после вызова функции начинаем звонить по заданному номеру
+ *
+ * @param number - номер телефона в формате "+79XXXXXXXXX"
+ */
+void callTo(String number) {
+    gprsSerial.print("ATD + ");
+    Serial.println(number);
+    gprsSerial.print(number);
+    gprsSerial.println(";");
+}
+
+/**
+ * Разбираем СМС.
+ *
+ * @param message - текст сообщения
+ */
+void readSMS(String message) {
+    Serial.println(message);
+    // Пересылаем полученное сообщение
+//    sendSMS(message, "+79876543210");
+}
+
+/**
+ * Отправляем СМС сообщение на указаный номер.
+ *
+ * @param message - текст сообщения
+ * @param number - номер телефона в формате "+79XXXXXXXXX"
+ */
+void sendSMS(String message, String number) {
+    // Устанавливает текстовый режим для SMS-сообщений
+    gprsSerial.print("AT+CMGF=1\r");
+    delay(100); // даём время на усваивание команды
+  
+    // Устанавливаем адресата: телефонный номер в формате "+79XXXXXXXXX"
+    gprsSerial.print("AT + CMGS = \"");
+    gprsSerial.print(number);
+    gprsSerial.println("\"");
+    delay(100);
+  
+    // Пишем текст сообщения
+    gprsSerial.println(message);
+    delay(1000);
+  
+    // Отправляем Ctrl+Z, обозначая, что сообщение готово
+    gprsSerial.println((char)26);
+} 
+
+/**
+ * Функция провоцирует поддержание коммуникации с платой даже если
+ * та была перезагружена без перезагрузки Arduino
+ */
+int updateTime = 0;
+void touch() {
+  if (millis() >= updateTime) {
+    gprsSerial.println("AT");
+    updateTime += 5000;
+  }
+}
+
+void lcdPrint(String msg, int numberStr, int startSymbol) {
+  lcd.setCursor(0, numberStr);
+  lcd.print("                ");
+  
+    lcd.setCursor(startSymbol, numberStr); // Переводим курсор на строку {numberStr} на {startSymbol} символ
+    
+    lcd.print(msg); // Отрисовываем строку на дисплей
+}
+
+void initNumber() {
+  number = "+7";
+}
+
+void addToNumber(char num) {
+  if (number.length() < 12) {
+    number = number + num;
+  }
+}
