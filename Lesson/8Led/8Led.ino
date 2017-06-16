@@ -7,7 +7,7 @@ int e=10;// set #10 connect e segment.
 int f=8;// set #8 connect f segment.
 int g=9;// set #9 connect g segment.
 int dp=4;// set #4 connect dp segment.
-void digital_1(void) //display number ¡°1¡±
+void digital_1(void) //display number Â¡Â°1Â¡Â±
 {
 unsigned char j;
 digitalWrite(c,HIGH);//gives #5 pin high level, lighten c segment digitalWrite(b,HIGH);// lighten b segment
@@ -15,7 +15,7 @@ for(j=7;j<=11;j++)//turn off the rest segments
 digitalWrite(j,LOW);
 digitalWrite(dp,LOW);//turn off decimal point DP segment
 }
-void digital_2(void) // display number ¡°2¡±
+void digital_2(void) // display number Â¡Â°2Â¡Â±
 
 {
 unsigned char j;
@@ -27,7 +27,7 @@ digitalWrite(dp,LOW);
 digitalWrite(c,LOW);
 digitalWrite(f,LOW);
 }
-void digital_3(void) // display number ¡°3¡±
+void digital_3(void) // display number Â¡Â°3Â¡Â±
 {
 unsigned char j;
 digitalWrite(g,HIGH);
@@ -38,7 +38,7 @@ digitalWrite(dp,LOW);
 digitalWrite(f,LOW);
 digitalWrite(e,LOW);
 }
-void digital_4(void) // display number ¡°4¡±
+void digital_4(void) // display number Â¡Â°4Â¡Â±
 
 {
 digitalWrite(c,HIGH);
@@ -50,7 +50,7 @@ digitalWrite(a,LOW);
 digitalWrite(e,LOW);
 digitalWrite(d,LOW);
 }
-void digital_5(void) // display number ¡°5¡±
+void digital_5(void) // display number Â¡Â°5Â¡Â±
 {
 unsigned char j;
 for(j=7;j<=9;j++)
@@ -61,7 +61,7 @@ digitalWrite(dp,LOW);
 digitalWrite(b,LOW);
 digitalWrite(e,LOW);
 }
-void digital_6(void) // display number ¡°6¡±
+void digital_6(void) // display number Â¡Â°6Â¡Â±
 {
 unsigned char j;
 for(j=7;j<=11;j++)
@@ -70,7 +70,7 @@ digitalWrite(c,HIGH);
 digitalWrite(dp,LOW);
 digitalWrite(b,LOW);
 }
-void digital_7(void) // display number ¡°7¡±
+void digital_7(void) // display number Â¡Â°7Â¡Â±
 {
 unsigned char j;
 for(j=5;j<=7;j++)
@@ -79,7 +79,7 @@ digitalWrite(dp,LOW);
 for(j=8;j<=11;j++)
 digitalWrite(j,LOW);
 }
-void digital_8(void) // display number ¡°8¡±
+void digital_8(void) // display number Â¡Â°8Â¡Â±
 {
 unsigned char j;
 for(j=5;j<=11;j++)
@@ -96,21 +96,21 @@ void loop()
 {
 while(1)
 {
-digital_1();//display number ¡°1¡±
+digital_1();//display number Â¡Â°1Â¡Â±
 delay(2000);//delay 2s
-digital_2();//display number ¡°2¡±
+digital_2();//display number Â¡Â°2Â¡Â±
 delay(1000); //delay 1s
-digital_3();//display number ¡°3¡±
+digital_3();//display number Â¡Â°3Â¡Â±
 delay(1000); //delay 1s
-digital_4();//display number ¡°4¡±
+digital_4();//display number Â¡Â°4Â¡Â±
 delay(1000); //delay 1s
-digital_5();//display number ¡°5¡±
+digital_5();//display number Â¡Â°5Â¡Â±
 delay(1000); //delay 1s
-digital_6();//display number ¡°6¡±
+digital_6();//display number Â¡Â°6Â¡Â±
 delay(1000); //\delay 1s
-digital_7();//display number ¡°7¡±
+digital_7();//display number Â¡Â°7Â¡Â±
 delay(1000); //delay 1s
-digital_8();//display number ¡°1¡±
+digital_8();//display number Â¡Â°1Â¡Â±
 delay(1000); //delay 1s
 }
 }

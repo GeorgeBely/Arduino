@@ -8,7 +8,7 @@
 #define DHTTYPE DHT21
 
 /** С помощью этой переменной будем получать и обрабатывать данные с термометра */
-DHT dht(DHTPIN, DHTTYPE);
+DHT dht(DHT_PIN, DHTTYPE);
 
 
 void setup() {

@@ -5,7 +5,7 @@
 #define SPEAKER_PIN 3
 
 /** Ноты */
-#define c 261
+#define C 261
 #define d 294
 #define e 329
 #define f 349
@@ -118,7 +118,7 @@ void march() {
 
     beep(a, 500);
     beep(f, 375);
-    beep(c, 125);
+    beep(C, 125);
     beep(a, 1000);
 }
 

@@ -21,7 +21,8 @@ void setup() {
 }
 
 void loop() {
-    lcdPrint("Hello World!", 0, 2);
+    if (count == 1)
+        lcdPrint("Hello World!", 0, 2);
 
     char sCount[5];
     itoa(count, sCount, 10);
@@ -41,7 +42,7 @@ void loop() {
  *                      (0 первая строка, 1 вторая строка)
  */
 void lcdPrint(String msg, int numberStr, int startSymbol) {
-    lcd.setCursor(0, numberStr); // Переводим курсор на строку {numberStr} на {startSymbol} символ
+    lcd.setCursor(startSymbol, numberStr); // Переводим курсор на строку {numberStr} на {startSymbol} символ
     lcd.print("                ");
     lcd.setCursor(startSymbol, numberStr); // Переводим курсор на строку {numberStr} на {startSymbol} символ
     lcd.print(msg); // Отрисовываем строку на дисплей

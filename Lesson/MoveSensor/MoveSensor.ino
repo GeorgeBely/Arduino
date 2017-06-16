@@ -16,7 +16,7 @@ void setup() {
 void loop() {
     boolean haveMove = isMoveEnable(MOVE_SENSOR_PIN);
     if (haveMove) {
-        digitalWrite(LED, HIGH);
+        digitalWrite(LED_PIN, HIGH);
         Serial.println("Зафиксировано движение!");
     }
 
