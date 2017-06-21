@@ -1,33 +1,25 @@
 #include <SPI.h>
-#include <nRF24L01.h>
 #include <RF24.h>
 
-int pin = A0;
-float temperature[2];
-
-double Fahrenheit(double celsius) {
-    return ((double)(9 / 5) * celsius) + 32;
-}
-
-double Kelvin(double celsius) {
-    return celsius + 273.15;
-}
-
 RF24 radio(9, 10);
-const uint64_t pipe = 0xE8E8F0F0E1LL;
+const uint32_t pipe = 123456789;
+byte massiv[64];
 
-void setup(void) {
+void setup() {
+    Serial.begin(57600);
     radio.begin();
+    radio.setDataRate(RF24_250KBPS);
+    radio.setPALevel(RF24_PA_MAX);
+    radio.setCRCLength(RF24_CRC_8);
+    radio.setRetries(15,15);
     radio.openWritingPipe(pipe);
 }
 
-int count = 0;
-
-void loop(void) {
-    count++;
-    float temp, humi;
-    temperature[0] = count;
-    temperature[1] = 123;
-    radio.write(temperature, sizeof(temperature));
+void loop() {
+    String text = "ololo pish pish 132&*()1QWERT\\dfoiuytrewqsdfghjk";
+    for (int i = 0; i < text.length(); i++) {
+        massiv[i] = (byte)text[i];
+    }
+    radio.write(massiv, sizeof(massiv));
     delay(100);
 }
