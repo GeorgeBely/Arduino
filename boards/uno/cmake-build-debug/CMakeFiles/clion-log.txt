@@ -1,0 +1,4 @@
+/home/gbeliy/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/171.4694.31/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/gbeliy/Workspace/Arduino/boards/uno
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug

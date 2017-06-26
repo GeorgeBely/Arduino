@@ -1,0 +1,1 @@
+/home/gbeliy/.platformio/packages/toolchain-atmelavr/bin/avr-g++   -g   CMakeFiles/uno.dir/src/GSM/GSM.cpp.o CMakeFiles/uno.dir/src/LCD/LCD.cpp.o CMakeFiles/uno.dir/src/main.cpp.o  -o uno -rdynamic 

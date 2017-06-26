@@ -1,0 +1,11 @@
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/PLATFORMIO_BUILD.dir
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/PLATFORMIO_UPLOAD.dir
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/PLATFORMIO_CLEAN.dir
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/PLATFORMIO_PROGRAM.dir
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/PLATFORMIO_TEST.dir
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/PLATFORMIO_UPLOADFS.dir
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/PLATFORMIO_REBUILD_PROJECT_INDEX.dir
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/PLATFORMIO_UPDATE_ALL.dir
+/home/gbeliy/Workspace/Arduino/boards/uno/cmake-build-debug/CMakeFiles/uno.dir
