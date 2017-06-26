@@ -1,8 +1,8 @@
 #include <Wire.h>
 #include <DS1302.h>
-#include <GSM.h>
-#include "LCD/LCDMobile.h"
 #include "GSM/GSM.h"
+#include "LCD/LCDMobile.h"
+#include "Keypad/KeypadMobile.h"
 
 /** Номера пинов Arduino, к которым подключается модуль реального времени */
 #define CLK_PIN 13
@@ -16,6 +16,12 @@
 #define GSM_TX_PIN 8
 
 
+/** Задаём соответствыя, к каким пинам подключена строка. Можно использовать как аналоговые пины, так и цифровые. */
+byte rowPins[] = {2b, 3b, 4b, 5b};
+
+/** Задаём соответствыя, к каким пинам подключён столбец. Можно использовать как аналоговые пины, так и цифровые. */
+byte colPins[] = {A1, A0, 6};
+
 // 0, 1, 11, 12, 13, A2, A3
 
 
@@ -25,14 +31,7 @@ char letters[ROWS - 1][COLS][5] = {
         {{'p', 'q', 'r', 's', '7'}, {'t', 'u', 'v', '8', '8'}, {'w', 'x', 'y', 'z', '9'}}
 };
 
-/** Задаём соответствыя, к каким пинам подключена строка. Можно использовать как аналоговые пины, так и цифровые. */
-byte rowPins[ROWS] = {2, 3, 4, 5};
 
-/** Задаём соответствыя, к каким пинам подключён столбец. Можно использовать как аналоговые пины, так и цифровые. */
-byte colPins[COLS] = {A1, A0, 6};
-
-/** С помощью этой переменной будем получать и обрабатывать данные с кейпада */
-Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
 /** С помощью этой переменной будем получкать данные с модуля */
 DS1302 rtc(RST_PIN, DAT_PIN, CLK_PIN);
@@ -69,6 +68,8 @@ char lastNameChar = ' ';
 GSMMobile gsm(GSM_RX_PIN, GSM_TX_PIN);
 
 LCDMobile lcd(A4, A0);
+
+KeypadMobile keypadMobile(rowPins, colPins);
 
 void setup() {
     Serial.begin(9600);

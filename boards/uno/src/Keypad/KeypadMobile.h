@@ -6,6 +6,8 @@
 
 class KeypadMobile {
 
+public:
+    KeypadMobile(byte rowPins[], byte colPins[]);
 };
 
 
