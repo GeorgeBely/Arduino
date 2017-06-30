@@ -1,0 +1,4 @@
+C:\Users\beliy\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\171.4694.31\bin\cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Workspace\Arduino\Projects\mobile\uno
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Workspace/Arduino/Projects/mobile/uno/cmake-build-debug

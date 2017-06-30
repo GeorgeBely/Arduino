@@ -1,0 +1,11 @@
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/PLATFORMIO_UPLOADFS.dir
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/PLATFORMIO_BUILD.dir
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/PLATFORMIO_UPLOAD.dir
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/PLATFORMIO_CLEAN.dir
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/PLATFORMIO_REBUILD_PROJECT_INDEX.dir
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/PLATFORMIO_TEST.dir
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/esp8266.dir
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/PLATFORMIO_PROGRAM.dir
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/PLATFORMIO_UPDATE_ALL.dir
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Workspace/Arduino/Projects/esp8266/cmake-build-debug/CMakeFiles/rebuild_cache.dir

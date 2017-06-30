@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(uno)
+project(esp8266)
 
 include(CMakeListsPrivate.txt)
 
@@ -51,4 +51,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(${PROJECT_NAME} ../../../libraries/ ${SRC_LIST} src)
+add_executable(${PROJECT_NAME} ../../../libraries ${SRC_LIST} src src/main.cpp)
