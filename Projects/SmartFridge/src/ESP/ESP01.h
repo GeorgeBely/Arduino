@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <SoftwareSerial.h>
 
 #ifndef SMARTFRIDGE_ESP01_H
 #define SMARTFRIDGE_ESP01_H
@@ -8,6 +9,7 @@ class ESP01 {
 
 
 public:
+    SoftwareSerial espSerial;
     ESP01(uint8_t rxPin, uint8_t txPin);
     bool monitoringESP(void);
     bool connectToWiFi(String ssid, String password);

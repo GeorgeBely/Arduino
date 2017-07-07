@@ -51,4 +51,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(${PROJECT_NAME} lib ${SRC_LIST} src)
+add_executable(${PROJECT_NAME} src/ESP ${SRC_LIST} src/main.cpp)

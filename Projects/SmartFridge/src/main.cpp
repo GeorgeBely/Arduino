@@ -8,10 +8,17 @@ ESP01 esp(7, 8);
 void setup() {
     Serial.begin(9600);
     Serial.println("start");
-
-    esp.connectToWiFi("Rosteldcom_5f69", "PFCFTZZR");
-    esp.startServer();
+    delay(500);
+    esp.espSerial.begin(115200);
+    delay(2000);
+    esp.espSerial.println("AT+CWMODE=3");
+    delay(500);
+//    esp.connectToWiFi("Rosteldcom_5f69", "PFCFTZZR");
+    delay(500);
+//    esp.startServer();
+    delay(500);
 }
+
 
 
 
@@ -27,7 +34,7 @@ void loop() {
         Serial.print(msg);
         Serial.println("|");
 
-        esp.sendMessage(msg);
+        esp.espSerial.println(msg);
     }
 
     delay(100);

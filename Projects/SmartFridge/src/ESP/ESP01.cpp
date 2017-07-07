@@ -1,20 +1,15 @@
 #include <Arduino.h>
 #include "ESP01.h"
-#include <SoftwareSerial.h>
-
-
-/** заводим Serial-соединение с Esp-01 */
-SoftwareSerial espSerial(0, 1);
 
 
 ESP01::ESP01(uint8_t rxPin, uint8_t txPin)
         : espSerial(SoftwareSerial(rxPin, txPin)) {
 
     // Esp-01 общается по умолчанию на скорости 115200 бод
-    espSerial.begin(115200);
+//    espSerial.begin(115200);
 
-    getCommand("AT+CWMODE=3");
-    delay(500);
+//    getCommand("AT+CWMODE=3");
+//    delay(500);
 }
 
 
@@ -46,7 +41,7 @@ bool ESP01::sendMessage(String message) {
 
 bool ESP01::postCommand(String command) {
     espSerial.println(command);
-    return "OK" == readSerial();
+    return readSerial() == "OK";
 }
 
 String ESP01::getCommand(String command) {
