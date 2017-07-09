@@ -44,9 +44,9 @@ class ESP01 {
     const String CIPSERVER = "AT+CIPSERVER=1," + LOCAL_SERVER_PORT;
 
 
-    SoftwareSerial espSerial;
 
 public:
+    SoftwareSerial espSerial;
     ESP01(uint8_t rxPin, uint8_t txPin);
     bool monitoringESP(void);
     bool connectToWiFi(String ssid, String password);

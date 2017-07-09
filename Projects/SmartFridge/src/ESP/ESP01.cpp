@@ -5,15 +5,13 @@
 ESP01::ESP01(uint8_t rxPin, uint8_t txPin)
         : espSerial(SoftwareSerial(rxPin, txPin)) {
     espSerial.begin(SERIAL_BOLD);
-
-    getCommand(CWMODE);
 }
 
 /**
  * Функция опрашивает ESP модуль на наличие сообщений с платы.
  */
 bool ESP01::monitoringESP() {
-    touch();
+//    touch();
     return espSerial.available() != 0;
 }
 
@@ -53,6 +51,8 @@ bool ESP01::startServer() {
  * @return {true}, если подключение прошло успешно, {false} в противном случае
  */
 bool ESP01::connectToWiFi(String ssid, String password) {
+    if (!postCommand(CWMODE))
+        return false;
     return postCommand("AT+CWJAP=\"" + ssid + "\",\"" + password + "\"");
 }
 
@@ -63,8 +63,17 @@ bool ESP01::connectToWiFi(String ssid, String password) {
  */
 String ESP01::readSerial() {
     String msg = "";
+    bool lastSymbolN = false;
     while (espSerial.available()) {
-        msg += espSerial.readString();
+        char symbol = (char) espSerial.read();
+        if (symbol == '\n') {
+            lastSymbolN = true;
+        } else {
+            if (lastSymbolN)
+                msg = "";
+            lastSymbolN = false;
+            msg += symbol;
+        }
     }
     return msg;
 }
@@ -76,8 +85,15 @@ String ESP01::readSerial() {
  * @return {true}, если команда выполнилась без ошибок, {false} в противном случае
  */
 bool ESP01::postCommand(String command) {
+    delay(5000);
+    Serial.println("------send command--------" + command);
     espSerial.println(command);
-    return readSerial() == "OK";
+    String read = readSerial();
+    Serial.println("++++++read result+++++++++" + read);
+    Serial.println()
+
+    Serial.println(read.equals("OK"));
+    return read.equals("OK");
 }
 
 /**
@@ -87,6 +103,7 @@ bool ESP01::postCommand(String command) {
  * @return результат выполнения команды
  */
 String ESP01::getCommand(String query) {
+    delay(1000);
     espSerial.println(query);
     return readSerial();
 }
