@@ -9,17 +9,19 @@ void setup() {
     Serial.begin(9600);
     Serial.println("start");
     delay(500);
-    esp.espSerial.begin(115200);
-    delay(2000);
-    esp.espSerial.println("AT+CWMODE=3");
+    if (esp.connectToWiFi("Rostelecom_5f69", "PFCFTZZR")) {
+        Serial.println("Connect to Wi-Fi");
+    } else {
+        Serial.println("Not connect to Wi-fi");
+    }
     delay(500);
-//    esp.connectToWiFi("Rosteldcom_5f69", "PFCFTZZR");
-    delay(500);
-//    esp.startServer();
+    if (esp.startServer()) {
+        Serial.println("Start server");
+    } else {
+        Serial.println("Server not started");
+    }
     delay(500);
 }
-
-
 
 
 void loop() {
@@ -34,7 +36,7 @@ void loop() {
         Serial.print(msg);
         Serial.println("|");
 
-        esp.espSerial.println(msg);
+        esp.sendMessage(0, msg);
     }
 
     delay(100);
