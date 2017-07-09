@@ -1,11 +1,13 @@
+/** Устанавливаем максимальное колличество секунд, при которых свет будет гореть без наличия движения */
+#define MAX_SEK_USE_LED_COUNT 15
+
 /** Номер пина Arduino, к которому подключено реле */
 #define RELAY_PIN 12
 
 /** Номер пина к которому подключён датчик движения */
 #define MOVE_SENSOR_PIN 3
 
-/** Устанавливаем максимальное колличество секунд, при которых свет будет гореть без наличия движения */
-#define MAX_SEK_USE_LED_COUNT 15
+#define PHOTO_PIN A1
 
 /** Переменная хранит время оставшиеся до отключения света */
 double useLedTime = 0;
@@ -21,18 +23,20 @@ void setup() {
 
 void loop() {
     boolean haveMove = isMoveEnable(MOVE_SENSOR_PIN);
-
-    if (haveMove) {
-        digitalWrite(RELAY_PIN, false);
-        useLedTime = MAX_SEK_USE_LED_COUNT;
+    
+    if (haveMove && analogRead(PHOTO_PIN) > 700) {
+        AdigitalWrite(RELAY_PIN, false);
+        useLedTime = MX_SEK_USE_LED_COUNT;
     } else {
         if (useLedTime <= 0) {
             digitalWrite(RELAY_PIN, true);
+        } else if (useLedTime <= 0.1) {
+            useLedTime -= 0.1;
         } else {
             useLedTime -= 0.1;
         }
     }
-
+  
     delay(100);
 }
 
