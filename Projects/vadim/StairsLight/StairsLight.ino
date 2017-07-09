@@ -15,7 +15,7 @@ double useLedTime = 0;
 
 void setup() {
     //Запускаем arduino на порте 9600, для общения с компьютером
-    Serial.begin(9600);
+//    Serial.begin(9600);
 
     pinMode(RELAY_PIN, OUTPUT);
     pinMode(MOVE_SENSOR_PIN, INPUT);
@@ -23,10 +23,14 @@ void setup() {
 
 void loop() {
     boolean haveMove = isMoveEnable(MOVE_SENSOR_PIN);
-    
+
+//    Serial.println(haveMove);
+//    Serial.println(useLedTime);
+
+
     if (haveMove && analogRead(PHOTO_PIN) > 700) {
-        AdigitalWrite(RELAY_PIN, false);
-        useLedTime = MX_SEK_USE_LED_COUNT;
+        digitalWrite(RELAY_PIN, false);
+        useLedTime = MAX_SEK_USE_LED_COUNT;
     } else {
         if (useLedTime <= 0) {
             digitalWrite(RELAY_PIN, true);
@@ -36,7 +40,7 @@ void loop() {
             useLedTime -= 0.1;
         }
     }
-  
+
     delay(100);
 }
 
