@@ -63,19 +63,10 @@ bool ESP01::connectToWiFi(String ssid, String password) {
  */
 String ESP01::readSerial() {
     String msg = "";
-    bool lastSymbolN = false;
     while (espSerial.available()) {
-        char symbol = (char) espSerial.read();
-        if (symbol == '\n') {
-            lastSymbolN = true;
-        } else {
-            if (lastSymbolN)
-                msg = "";
-            lastSymbolN = false;
-            msg += symbol;
-        }
+        msg += espSerial.readString();
     }
-    return msg;
+    return cutResultCommand(msg);
 }
 
 /**
@@ -90,7 +81,7 @@ bool ESP01::postCommand(String command) {
     espSerial.println(command);
     String read = readSerial();
     Serial.println("++++++read result+++++++++" + read);
-    Serial.println()
+    Serial.println();
 
     Serial.println(read.equals("OK"));
     return read.equals("OK");
@@ -118,4 +109,16 @@ void ESP01::touch() {
         espSerial.println("AT");
         updateTime += 5000;
     }
+}
+
+
+String ESP01::cutResultCommand(String result) {
+    while (result.charAt(result.length() - 1) == '\n') {
+        result = result.substring(0, result.length() - 1);
+    }
+    if (result.indexOf("\n") != -1) {
+        result = result.substring((unsigned int) (result.lastIndexOf('\n') + 1), result.length());
+    }
+
+    return "|" + result + "|";
 }

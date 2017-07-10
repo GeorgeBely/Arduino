@@ -58,6 +58,7 @@ private:
     bool postCommand(String command);
     String getCommand(String query);
     void touch(void);
+    String cutResultCommand(String result);
 
 };
 
