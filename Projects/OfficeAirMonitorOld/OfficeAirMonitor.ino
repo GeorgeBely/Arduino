@@ -2,7 +2,6 @@
 #include <LCD.h>
 #include <LiquidCrystal_I2C.h>
 #include "DHT.h"
-#include <MQ135.h>
 
 
 /** Подключаем термометр к пину 2 */
@@ -14,17 +13,34 @@
 /** Lkz Датчика AM2301 задаём: DHT21 */
 #define DHTTYPE DHT21
 
-/** Параметры для вычисления CO2 */
-#define R0 1200
+
+/// The load resistance on the board
+#define RLOAD 1.0
+
+/// Parameters for calculating ppm of CO2 from sensor resistance
 #define PARA 116.6020682
 #define PARB 2.769034857
+
+/// Parameters to model temperature and humidity dependence
+#define CORA 0.00035
+#define CORB 0.02718
+#define CORC 1.39538
+#define CORD 0.0018
+
+/// Atmospheric CO2 level for calibration purposes
+#define ATMOCO2 397.13
+
+
+#define RZERO_CALIBRATING_MASS_SIZE 60
+#define RZERO_CALIBRATING_COUNT 5
+
 
 #define CYCLE_ITERATION_COUNT 10
 
 /** С помощью этой переменной будем получать и обрабатывать данные с термометра */
 DHT dht(DHT_PIN, DHTTYPE);
 
-MQ135 mq(CO2_PIN);
+//MQ135 mq(CO2_PIN);
 
 /**
  * С помощью этой переменной будем отрисовывать данные на дисплей
@@ -53,6 +69,7 @@ void setup() {
 
     dht.begin();
 
+    lcdPrint("Calibrating...", 0, 0);
     Serial.print("Calibrating CO2 sensor");
     for(int i = 0; i < 40; i++){
         Serial.print(".");
@@ -64,7 +81,10 @@ void setup() {
 void loop() {
     float h = dht.readHumidity(); // Считываем влажность воздуха в процентах
     float t = dht.readTemperature(); // Считываем температуру в градусах
-    double CO2Tmp = mq.getCorrectedPPM(h, t);
+
+    updateRZero(t, h);
+
+    double CO2Tmp = getCorrectedPPM(h, t);
 
     // проверяем, что данные корректны
     if (!isnan(t)) {
@@ -107,15 +127,15 @@ void loop() {
         Serial.print(co2);
         Serial.println(" ppm");
 
-        String firstStr = "Temperature: ";
+        String firstStr = "Tem: ";
         firstStr += convertToStr(temperature);
+        firstStr += " Hum: ";
+        firstStr += convertToStr(humidity);
         String secondStr = "CO2: ";
         secondStr += convertToStr(co2);
-        secondStr += " humi: ";
-        secondStr += convertToStr(humidity);
 
         lcdPrint(firstStr, 0, 0);
-        lcdPrint(secondStr, 1, 0);
+        lcdPrint(secondStr, 1, 5);
 
         count = 0;
     } else {
@@ -149,4 +169,68 @@ String convertToStr(double value) {
     itoa(value, sCount, 10);
 
     return sCount;
+}
+
+
+/// Calibration resistance at atmospheric CO2 level
+float rZero = 69.11;
+float rZeroMass[RZERO_CALIBRATING_MASS_SIZE];;
+float rZeroEndMass[RZERO_CALIBRATING_COUNT];
+int rZeroCount = 0;
+int rZeroEndCount = 0;
+
+float getCorrectionFactor(float t, float h) {
+    return CORA * t * t - CORB * t + CORC - (h-33.)*CORD;
+}
+
+float getResistance() {
+    int val = analogRead(CO2_PIN);
+    return ((1023./(float)val) * 5. - 1.)*RLOAD;
+}
+
+float getCorrectedResistance(float t, float h) {
+    return getResistance()/getCorrectionFactor(t, h);
+}
+
+float getPPM() {
+    return PARA * pow((getResistance()/rZero), -PARB);
+}
+
+float getCorrectedPPM(float t, float h) {
+    return PARA * pow((getCorrectedResistance(t, h)/rZero), -PARB);
+}
+
+float getRZero() {
+    return getResistance() * pow((ATMOCO2/PARA), (1./PARB));
+}
+
+float getCorrectedRZero(float t, float h) {
+    return getCorrectedResistance(t, h) * pow((ATMOCO2/PARA), (1./PARB));
+}
+
+
+void updateRZero(float t, float h) {
+    if (rZeroCount >= RZERO_CALIBRATING_MASS_SIZE) {
+        float summ = 0.0;
+        for (int i = 0; i < RZERO_CALIBRATING_MASS_SIZE; i++) {
+            summ += rZeroMass[i];
+        }
+        if (rZeroEndCount >= RZERO_CALIBRATING_COUNT) {
+            float summEnd = 0.0;
+            for (int i = 0; i < RZERO_CALIBRATING_COUNT; i++) {
+                summEnd += rZeroEndMass[i];
+            }
+            rZero = summEnd/rZeroEndCount;
+            Serial.print("rZero: ");
+            Serial.println(rZero);
+            rZeroEndCount = 0;
+        } else {
+            rZeroEndMass[rZeroEndCount] = summ/rZeroCount;
+            rZeroEndCount++;
+        }
+        rZeroCount = 0;
+    } else {
+        rZeroMass[rZeroCount] = getCorrectedRZero(t, h);
+        rZeroCount++;
+    }
 }
