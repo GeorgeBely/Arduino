@@ -8,9 +8,14 @@
 
 /** Подключаем датчик CO2 к аналоговому пину 0 */
 #define CO2_PIN A0
+/** А так же к цифровому пину 7 (Не обязательно) */
+#define CO2_DIGITAL_PIN 7
 
 /** Подключаем термометр к пину 2 */
 #define DHT_PIN 2
+
+/** Подключаем светодиод к 13 пину */
+#define LED_PIN 13
 
 /** Для датчика AM2301 задаём: DHT21 */
 #define DHTTYPE DHT21
@@ -29,6 +34,8 @@ DHT dht(DHT_PIN, DHTTYPE);
 void setup() {
     Serial.begin(9600);
     dht.begin();
+    pinMode(CO2_DIGITAL_PIN, INPUT);
+    pinMode(LED_PIN, OUTPUT);
 
     //Перед использованием датчик нужно прогреть. Прогревать от 1 до 5 минут
     Serial.print("Calibrating ");
@@ -42,9 +49,11 @@ void setup() {
 void loop() {
     float h = dht.readHumidity(); // Считываем влажность воздуха в процентах
     float t = dht.readTemperature(); // Считываем температуру в градусах
+    double CO2 = mq.getCorrectedPPM(t, h); // Считываем уровень СО2 в PPM
+    bool thresholdExceeded = digitalRead(CO2_DIGITAL_PIN); // {true}, если больше заданного потенциометром порога
 
-    double CO2 = mq.getCorrectedPPM(t, h);
-  
+    digitalWrite(LED_PIN, !thresholdExceeded);
+
     Serial.print("CO2: ");
     Serial.print(CO2);
     Serial.println("ppm");
