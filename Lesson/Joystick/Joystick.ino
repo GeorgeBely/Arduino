@@ -1,6 +1,10 @@
+/** Нажатие на кнопку считывается вторым цифровым пином */
 #define SW_PIN 2
-#define X_PIN 0
-#define Y_PIN 1
+
+/** Подключаем к аналоговым пинам оси джостика X и Y */
+#define X_PIN A0
+#define Y_PIN A1
+
 
 void setup() {
     pinMode(SW_PIN, INPUT);
