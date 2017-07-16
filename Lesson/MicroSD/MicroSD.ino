@@ -1,5 +1,6 @@
 #include <SD.h>
 
+//13 (SCK), 12 (MISO), 11 (MOSI), 10 (CS)
 
 void setup() {
     Serial.begin(9600);
@@ -20,8 +21,8 @@ void setup() {
 
 void loop() {
     for (int i = 0; i < 500; i++) {
-        writeToFile("test.txt", i);
-        writeToFile("test2.txt", i + 1);
+        writeToFile("test.txt", convertToStr(i));
+        writeToFile("test2.txt", convertToStr(i + 1));
         delay(500);
     }
 }
@@ -30,7 +31,7 @@ void loop() {
 bool writeToFile(String fileName, String text) {
     // открываем файл. Обратите внимание, что открывать несколько файлов параллельно нельзя.
     // перед открытием нового файла, старый надо закрыть
-    File myFile = SD.open(fileName, FILE_WRITE);
+    File myFile = SD.open(fileName.c_str(), FILE_WRITE);
 
     // если удалось открыть файл, записываем в него:
     if (myFile) {
