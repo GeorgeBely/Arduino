@@ -31,11 +31,11 @@
 #define ATMOCO2 397.13
 
 
-#define RZERO_CALIBRATING_MASS_SIZE 60
-#define RZERO_CALIBRATING_COUNT 5
+#define RZERO_CALIBRATING_MASS_SIZE 1
+#define RZERO_CALIBRATING_COUNT 1
 
 
-#define CYCLE_ITERATION_COUNT 10
+#define CYCLE_ITERATION_COUNT 1
 
 /** С помощью этой переменной будем получать и обрабатывать данные с термометра */
 DHT dht(DHT_PIN, DHTTYPE);
@@ -58,6 +58,9 @@ float lastCorrectHumidity = 0;
 float lastCorrectTemperature = 0;
 double lastCorrectCo2 = 0;
 
+int hr = 18;
+int mn = 45;
+int sk = 30;
 
 
 void setup() {
@@ -71,8 +74,8 @@ void setup() {
 
     lcdPrint("Calibrating...", 0, 0);
     Serial.print("Calibrating CO2 sensor");
-    for(int i = 0; i < 40; i++){
-        Serial.print(".");
+    for(int i = 0; i < 1; i++){
+        Serial.println(i);
         delay(1000);
     }
     Serial.println("");
@@ -82,9 +85,9 @@ void loop() {
     float h = dht.readHumidity(); // Считываем влажность воздуха в процентах
     float t = dht.readTemperature(); // Считываем температуру в градусах
 
-    updateRZero(t, h);
-
-    double CO2Tmp = getCorrectedPPM(h, t);
+  //  updateRZero(t, h);
+    int a = analogRead(A0);
+    double CO2Tmp = getCorrectedPPM(a, h, t);
 
     // проверяем, что данные корректны
     if (!isnan(t)) {
@@ -117,13 +120,25 @@ void loop() {
         co2 = co2/CYCLE_ITERATION_COUNT;
 
 
+        Serial.print("time: ");
+        Serial.print(hr);
+        Serial.print(":");
+        Serial.print(mn);
+        Serial.print(":");
+        Serial.print(sk);
+        Serial.print("\t");
+        Serial.print("RZERO: ");
+        Serial.print(getCorrectedRZero(a, t, h));
+        Serial.print("\t");
         Serial.print("Humidity: ");
         Serial.print(humidity);
         Serial.print(" %\t");
         Serial.print("Temperature: ");
         Serial.print(temperature);
         Serial.print(" *C\t");
-        Serial.print("CO2: ");
+        Serial.print("A: ");
+        Serial.print(a);
+        Serial.print("\tCO2: ");
         Serial.print(co2);
         Serial.println(" ppm");
 
@@ -145,6 +160,7 @@ void loop() {
         count++;
     }
 
+    updateTime();
     delay(1000);
 }
 
@@ -173,7 +189,7 @@ String convertToStr(double value) {
 
 
 /// Calibration resistance at atmospheric CO2 level
-float rZero = 69.11;
+float rZero = 75.00;
 float rZeroMass[RZERO_CALIBRATING_MASS_SIZE];;
 float rZeroEndMass[RZERO_CALIBRATING_COUNT];
 int rZeroCount = 0;
@@ -183,34 +199,33 @@ float getCorrectionFactor(float t, float h) {
     return CORA * t * t - CORB * t + CORC - (h-33.)*CORD;
 }
 
-float getResistance() {
-    int val = analogRead(CO2_PIN);
+float getResistance(int val) {
     return ((1023./(float)val) * 5. - 1.)*RLOAD;
 }
 
-float getCorrectedResistance(float t, float h) {
-    return getResistance()/getCorrectionFactor(t, h);
+float getCorrectedResistance(int val, float t, float h) {
+    return getResistance(val)/getCorrectionFactor(t, h);
 }
 
-float getPPM() {
-    return PARA * pow((getResistance()/rZero), -PARB);
+float getPPM(int val) {
+    return PARA * pow((getResistance(val)/rZero), -PARB);
 }
 
-float getCorrectedPPM(float t, float h) {
-    return PARA * pow((getCorrectedResistance(t, h)/rZero), -PARB);
+float getCorrectedPPM(int val, float t, float h) {
+    return PARA * pow((getCorrectedResistance(val, t, h)/rZero), -PARB);
 }
 
-float getRZero() {
-    return getResistance() * pow((ATMOCO2/PARA), (1./PARB));
+float getRZero(int val) {
+    return getResistance(val) * pow((ATMOCO2/PARA), (1./PARB));
 }
 
-float getCorrectedRZero(float t, float h) {
-    return getCorrectedResistance(t, h) * pow((ATMOCO2/PARA), (1./PARB));
+float getCorrectedRZero(int val, float t, float h) {
+    return getCorrectedResistance(val, t, h) * pow((ATMOCO2/PARA), (1./PARB));
 }
 
 
 void updateRZero(float t, float h) {
-    if (rZeroCount >= RZERO_CALIBRATING_MASS_SIZE) {
+  /*  if (rZeroCount >= RZERO_CALIBRATING_MASS_SIZE) {
         float summ = 0.0;
         for (int i = 0; i < RZERO_CALIBRATING_MASS_SIZE; i++) {
             summ += rZeroMass[i];
@@ -232,5 +247,23 @@ void updateRZero(float t, float h) {
     } else {
         rZeroMass[rZeroCount] = getCorrectedRZero(t, h);
         rZeroCount++;
+    }*/
+}
+
+void updateTime() {
+    sk += 1;
+    if (sk == 60) {
+      mn += 1;
+      sk = 0; 
+    }
+    if (mn == 60) {
+      hr += 1;
+      mn = 0; 
+    }
+    if (hr == 24) {
+      hr = 0;
     }
 }
+
+
+
