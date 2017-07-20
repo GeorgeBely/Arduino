@@ -32,13 +32,3 @@ void loop(void) {
         radio.write(temperature, sizeof(temperature));
     }
 }
-
-
-    msg = "";
-    while(Serial.available()) {
-        msg = Serial.readString();// read the incoming data as string
-    }
-
-    if (msg != "") {
-        Serial.println(msg);
-    }
