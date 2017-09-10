@@ -2,7 +2,12 @@
 #include <LCD.h>
 #include <LiquidCrystal_I2C.h>
 #include "DHT.h"
+#include <DS1302.h>
 
+/** Номера пинов Arduino, к которым подключается модуль реального времени */
+#define CLK_PIN 13
+#define DAT_PIN 12
+#define RST_PIN 10
 
 /** Подключаем термометр к пину 2 */
 #define DHT_PIN 2
@@ -30,16 +35,13 @@
 /// Atmospheric CO2 level for calibration purposes
 #define ATMOCO2 397.13
 
-
-//#define RZERO_CALIBRATING_MASS_SIZE 50
-//#define RZERO_CALIBRATING_COUNT 5
-
-
 #define CYCLE_ITERATION_COUNT 30
 
 /** С помощью этой переменной будем получать и обрабатывать данные с термометра */
 DHT dht(DHT_PIN, DHTTYPE);
 
+/** С помощью этой переменной будем получкать данные с модуля */
+DS1302 rtc(RST_PIN, DAT_PIN, CLK_PIN);
 
 /**
  * С помощью этой переменной будем отрисовывать данные на дисплей
@@ -61,10 +63,8 @@ double lastCorrectCo2 = 0;
 int lastCorrectAnalogCO2 = 0;
 float lastCorrectRZero = 0;
 
-int hr = 12;
-int mn = 53;
-int sk = 30;
-
+/// Calibration resistance at atmospheric CO2 level
+float rZero = 115.00;
 
 void setup() {
     Serial.begin(9600);
@@ -140,15 +140,15 @@ void loop() {
 
 
         Serial.print("time: ");
-        Serial.print(hr);
-        Serial.print(":");
-        Serial.print(mn);
-        Serial.print(":");
-        Serial.print(sk);
+        Serial.print(getTime());
         Serial.print("\t");
 
         Serial.print("RZERO: ");
         Serial.print(rzero);
+        Serial.print("\t");
+
+        Serial.print("local RZERO: ");
+        Serial.print(rZero);
         Serial.print("\t");
 
         Serial.print("A: ");
@@ -187,8 +187,7 @@ void loop() {
         count++;
     }
 
-    updateTime();
- //   updateRZero(a, t, h);
+    updateRZero(a, t, h);
     delay(880);
 }
 
@@ -214,14 +213,6 @@ String convertToStr(double value) {
 
     return sCount;
 }
-
-
-/// Calibration resistance at atmospheric CO2 level
-float rZero = 65.00;
-//float rZeroMass[RZERO_CALIBRATING_MASS_SIZE];;
-//float rZeroEndMass[RZERO_CALIBRATING_COUNT];
-//int rZeroCount = 0;
-//int rZeroEndCount = 0;
 
 float getCorrectionFactor(float t, float h) {
     return CORA * t * t - CORB * t + CORC - (h-33.)*CORD;
@@ -253,49 +244,45 @@ float getCorrectedRZero(int val, float t, float h) {
 
 
 void updateRZero(int val, float t, float h) {
-//    if (hr != 3) {
-//      return;
-//    }
-//    if (rZeroCount >= RZERO_CALIBRATING_MASS_SIZE) {
-//        float summ = 0.0;
-//        for (int i = 0; i < RZERO_CALIBRATING_MASS_SIZE; i++) {
-//            summ += rZeroMass[i];
-//        }
-//        if (rZeroEndCount >= RZERO_CALIBRATING_COUNT) {
-//            float summEnd = 0.0;
-//            for (int i = 0; i < RZERO_CALIBRATING_COUNT; i++) {
-//                summEnd += rZeroEndMass[i];
-//            }
-//            rZero = summEnd/rZeroEndCount;
-//            Serial.print("rZero: ");
-//            Serial.println(rZero);
-//            rZeroEndCount = 0;
-//        } else {
-//            rZeroEndMass[rZeroEndCount] = summ/rZeroCount;
-//            rZeroEndCount++;
-//        }
-//        rZeroCount = 0;
-//    } else {
-//        rZeroMass[rZeroCount] = getCorrectedRZero(val, t, h);
-//        rZeroCount++;
-//    }
+    Time tim = rtc.time();
+    if (tim.hr != 3) {
+        return;
+    }
+
+    rZero = getCorrectedRZero(val, t, h);
 }
 
-void updateTime() {
-    sk += 1;
-    if (sk == 60) {
-      mn += 1;
-      sk = 0; 
+/**
+ * @return текущее время с модуля времени.
+ */
+String getTime() {
+    Time t = rtc.time();
+    int i = 0;
+    while (t.yr == 2000 && i < 10) {
+      delay(50);
+      i++;
+      t = rtc.time();
     }
-    if (mn == 60) {
-      hr += 1;
-      mn = 0; 
-    }
-    if (hr == 24) {
-      hr = 0;
-    }
-}
 
+    String result = "";
+
+    result += t.yr;
+    result += "-";
+    result += t.mon;
+    result += "-";
+    result += t.date;
+    result += "  ";
+    result += t.hr;
+    result += ":";
+    result += t.min;
+    result += ":";
+    result += t.sec;
+    result += "  (";
+    result += t.day;
+    result += ")";
+
+    return result;
+}
 
 
 
