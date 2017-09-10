@@ -1,0 +1,12 @@
+Check                   Lesson/Buzzer
+Add scheme for          Lesson/CO2
+Check                   Lesson/Esp01
+Check                   GSM
+Add scheme for          Lesson/Joystick
+Edit schema for         Lesson/Keypad
+Check                   Lesson/Keypad
+Check                   Lesson/LCD
+Check                   LED8
+Check                   Microphone
+Update                  MicroSD
+Add scheme for          MicroSD
