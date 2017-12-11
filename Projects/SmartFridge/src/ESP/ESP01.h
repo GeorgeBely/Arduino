@@ -7,8 +7,6 @@
 
 class ESP01 {
 
-    /** Скорость последовательного подключения */
-    const int SERIAL_BOLD = 19200;
 
     /** Номер порта на котором стартует локальные сервер */
     const int LOCAL_SERVER_PORT = 8080;
@@ -46,6 +44,9 @@ class ESP01 {
 
 
 public:
+    /** Скорость последовательного подключения */
+    static const int SERIAL_BOLD = 19200;
+
     SoftwareSerial espSerial;
     ESP01(uint8_t rxPin, uint8_t txPin);
     bool monitoringESP(void);

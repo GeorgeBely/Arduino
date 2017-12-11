@@ -30,6 +30,8 @@ void loop() {
 //        Serial.println(message);
 //    }
 
+    esp.SERIAL_BOLD;
+
     if (Serial.available()) {
         String msg = Serial.readString();
         Serial.print("Send to esp |");
